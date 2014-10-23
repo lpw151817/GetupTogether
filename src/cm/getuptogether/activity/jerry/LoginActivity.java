@@ -5,9 +5,12 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import android.app.ProgressDialog;
+import android.os.Bundle;
 import android.widget.Button;
 import cm.getuptogether.R;
 import cm.getuptogether.activity.BaseActivity;
+import cm.getuptogether.bean.lpw.ThirdPartyVerification;
+import cm.getuptogether.dao.lpw.ThirdPartyVerificationDAO;
 
 import com.renn.rennsdk.RennClient;
 import com.renn.rennsdk.RennExecutor.CallBack;
@@ -52,6 +55,16 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 
 	RennClient rennClient;
 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		dao=new ThirdPartyVerificationDAO(this);
+		
+		
+		
+		
+	}
+	
 	@Click
 	void btn_renren() {
 		// ≥ı ºªØRennClient
