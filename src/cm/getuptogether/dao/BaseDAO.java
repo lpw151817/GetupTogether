@@ -32,7 +32,7 @@ public abstract class BaseDAO<T, ID> {
 		getHelper();
 	}
 
-	public OrmDatabaseHelper getHelper() {
+	private OrmDatabaseHelper getHelper() {
 		if (helper == null) {
 			helper = OpenHelperManager.getHelper(c, OrmDatabaseHelper.class);
 		}
@@ -46,11 +46,11 @@ public abstract class BaseDAO<T, ID> {
 	 * 
 	 * @return The number of rows updated in the database. This should be 1.
 	 */
-	public int insert(T t) throws SQLException {
+	protected int insert(T t) throws SQLException {
 		return getDao().create(t);
 	}
 
-	public int insert(List<T> ts) throws SQLException {
+	protected int insert(List<T> ts) throws SQLException {
 		int i = 0;
 		for (T t : ts) {
 			insert(t);
@@ -62,18 +62,18 @@ public abstract class BaseDAO<T, ID> {
 	// ////////////////////
 
 	// //////////////////////查
-	public List<T> query(PreparedQuery<T> preparedQuery) throws SQLException {
+	protected List<T> query(PreparedQuery<T> preparedQuery) throws SQLException {
 		return getDao().query(preparedQuery);
 	}
 
-	public List<T> query(String attributeName, String attributeValue) throws SQLException {
+	protected List<T> query(String attributeName, String attributeValue) throws SQLException {
 		QueryBuilder<T, Integer> queryBuilder = getDao().queryBuilder();
 		queryBuilder.where().eq(attributeName, attributeValue);
 		PreparedQuery<T> preparedQuery = queryBuilder.prepare();
 		return query(preparedQuery);
 	}
 
-	public List<T> query(String[] attributeNames, String[] attributeValues) throws SQLException, IllegalArgumentException {
+	protected List<T> query(String[] attributeNames, String[] attributeValues) throws SQLException, IllegalArgumentException {
 		if (attributeNames.length != attributeValues.length) {
 			throw new IllegalArgumentException("params size is not equal");
 		}
@@ -90,11 +90,11 @@ public abstract class BaseDAO<T, ID> {
 		return query(preparedQuery);
 	}
 
-	public List<T> queryAll() throws SQLException {
+	protected List<T> queryAll() throws SQLException {
 		return getDao().queryForAll();
 	}
 
-	public List<T> query(Map<String, Object> map) throws SQLException {
+	protected List<T> query(Map<String, Object> map) throws SQLException {
 		QueryBuilder<T, Integer> queryBuilder = getDao().queryBuilder();
 		if (!map.isEmpty()) {
 			Where<T, Integer> wheres = queryBuilder.where();
@@ -116,7 +116,7 @@ public abstract class BaseDAO<T, ID> {
 	/**
 	 * 查询比lowMap大，比highMap小的数据
 	 */
-	public List<T> query(Map<String, Object> map, Map<String, Object> lowMap, Map<String, Object> highMap) throws SQLException {
+	protected List<T> query(Map<String, Object> map, Map<String, Object> lowMap, Map<String, Object> highMap) throws SQLException {
 		QueryBuilder<T, Integer> queryBuilder = getDao().queryBuilder();
 		Where<T, Integer> wheres = queryBuilder.where();
 		if (!map.isEmpty()) {
@@ -181,21 +181,21 @@ public abstract class BaseDAO<T, ID> {
 	/**
 	 * @return The number of rows updated in the database. This should be 1.
 	 */
-	public int delete(PreparedDelete<T> preparedDelete) throws SQLException {
+	protected int delete(PreparedDelete<T> preparedDelete) throws SQLException {
 		return getDao().delete(preparedDelete);
 	}
 
 	/**
 	 * {@link #delete(PreparedDelete)}
 	 */
-	public int delete(T t) throws SQLException {
+	protected int delete(T t) throws SQLException {
 		return getDao().delete(t);
 	}
 
 	/**
 	 * {@link #delete(PreparedDelete)}
 	 */
-	public int delete(List<T> lst) throws SQLException {
+	protected int delete(List<T> lst) throws SQLException {
 		return getDao().delete(lst);
 	}
 
@@ -203,7 +203,7 @@ public abstract class BaseDAO<T, ID> {
 	 * 
 	 * @return The number of rows updated in the database.It maybe 0.
 	 */
-	public int delete(String[] attributeNames, String[] attributeValues) throws SQLException, IllegalArgumentException {
+	protected int delete(String[] attributeNames, String[] attributeValues) throws SQLException, IllegalArgumentException {
 		List<T> lst = query(attributeNames, attributeValues);
 		if (null != lst && !lst.isEmpty()) {
 			return delete(lst);
@@ -214,7 +214,7 @@ public abstract class BaseDAO<T, ID> {
 	/**
 	 * {@link #delete(PreparedDelete)}
 	 */
-	public int delete(String attributeName, String attributeValue) throws SQLException, IllegalArgumentException {
+	protected int delete(String attributeName, String attributeValue) throws SQLException, IllegalArgumentException {
 		List<T> lst = query(attributeName, attributeValue);
 		if (null != lst) {
 			return delete(lst);
@@ -222,7 +222,7 @@ public abstract class BaseDAO<T, ID> {
 		return 0;
 	}
 
-	public int deleteAll() throws SQLException {
+	protected int deleteAll() throws SQLException {
 		List<T> lst = queryAll();
 		if (lst != null)
 			return getDao().delete(lst);
@@ -237,13 +237,13 @@ public abstract class BaseDAO<T, ID> {
 	 * 
 	 * @return The number of rows updated in the database. This should be 1.
 	 */
-	public int update(T t) throws SQLException {
+	protected int update(T t) throws SQLException {
 		return getDao().update(t);
 	}
 
 	// //////////////
 
-	public boolean isTableExsits() throws SQLException {
+	protected boolean isTableExsits() throws SQLException {
 		return getDao().isTableExists();
 	}
 
@@ -253,7 +253,7 @@ public abstract class BaseDAO<T, ID> {
 	 *         class. Depending on the size of the table and the database type,
 	 *         this may be expensive and take a while.
 	 */
-	public long countOf() throws SQLException {
+	protected long countOf() throws SQLException {
 		return getDao().countOf();
 	}
 
