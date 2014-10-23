@@ -18,9 +18,9 @@ import com.renn.rennsdk.param.ListFeedParam;
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends BaseActivity implements com.renn.rennsdk.RennClient.LoginListener {
 
-	private final String APP_ID = "184321";
-	private final String API_KEY = "a3f4a750bf574ed2a3fec412dc5ae1d5";
-	private final String SECRET_KEY = "1bb78d82d8864366a2a104f08da4a85d";
+	private final String APP_ID = "272711";
+	private final String API_KEY = "da5be33beb8b4aa69f7f99f0737fb3eb";
+	private final String SECRET_KEY = "77dab849bcee456c8246607f4d588d07";
 	private final String AUTHEN_THINGS = "read_user_feed status_update";
 	/**
 	 * 人人的权限 描述
