@@ -1,11 +1,11 @@
-package cm.getuptogether.dao.lpw;
+package cm.getuptogether.dao.jerry;
 
 import java.sql.SQLException;
 
 import com.j256.ormlite.dao.Dao;
 
 import android.content.Context;
-import cm.getuptogether.bean.lpw.ThirdPartyVerification;
+import cm.getuptogether.bean.jerry.ThirdPartyVerification;
 import cm.getuptogether.dao.BaseDAO;
 
 public class ThirdPartyVerificationDAO extends BaseDAO<ThirdPartyVerification, Integer> {

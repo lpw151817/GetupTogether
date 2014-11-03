@@ -1,4 +1,4 @@
-package cm.getuptogether.bean.lpw;
+package cm.getuptogether.bean.jerry;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import cm.getuptogether.R;
 import cm.getuptogether.activity.BaseActivity;
-import cm.getuptogether.bean.lpw.ThirdPartyVerification;
-import cm.getuptogether.dao.lpw.ThirdPartyVerificationDAO;
+import cm.getuptogether.bean.jerry.ThirdPartyVerification;
+import cm.getuptogether.dao.jerry.ThirdPartyVerificationDAO;
 
 import com.renn.rennsdk.RennClient;
 import com.renn.rennsdk.RennExecutor.CallBack;
