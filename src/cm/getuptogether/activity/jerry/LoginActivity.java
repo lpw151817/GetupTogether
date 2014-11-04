@@ -3,6 +3,8 @@ package cm.getuptogether.activity.jerry;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -11,11 +13,13 @@ import cm.getuptogether.R;
 import cm.getuptogether.activity.BaseActivity;
 import cm.getuptogether.bean.jerry.ThirdPartyVerification;
 import cm.getuptogether.dao.jerry.ThirdPartyVerificationDAO;
+import cm.getuptogether.util.RenrenUtils;
 
 import com.renn.rennsdk.RennClient;
 import com.renn.rennsdk.RennExecutor.CallBack;
 import com.renn.rennsdk.RennResponse;
 import com.renn.rennsdk.exception.RennException;
+import com.renn.rennsdk.param.GetUserParam;
 import com.renn.rennsdk.param.ListFeedParam;
 
 @EActivity(R.layout.activity_login)
@@ -58,15 +62,8 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		dao=new ThirdPartyVerificationDAO(this);
-		
-		
-		
-		
-	}
-	
-	@Click
-	void btn_renren() {
+		dao = new ThirdPartyVerificationDAO(this);
+
 		// 初始化RennClient
 		rennClient = RennClient.getInstance(this);// 获取实例
 		rennClient.init(APP_ID, API_KEY, SECRET_KEY);// 设置应用程序信息
@@ -74,17 +71,25 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 		rennClient.setScope(AUTHEN_THINGS);
 		// 设置Token类型
 		rennClient.setTokenType("bearer"); // 使用bearer token
-		// 登录
-		rennClient.login(this);
+
+		if (rennClient.isLogin()) {
+			getUserInfo();
+		}
+
+	}
+
+	@Click
+	void btn_renren() {
 		// 通过为rennClient设置监听来处理登陆结果
 		rennClient.setLoginListener(this);
+		// 登录
+		rennClient.login(this);
 
 	}
 
 	// 人人登陆取消的回调
 	@Override
 	public void onLoginCanceled() {
-		// TODO Auto-generated method stub
 		System.out.println("cancel...");
 	}
 
@@ -93,30 +98,31 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 	// 人人登陆成功的回调
 	@Override
 	public void onLoginSuccess() {
-		// TODO Auto-generated method stub
+		getUserInfo();
+	}
+
+	public void getUserInfo() {
 		dialog = new ProgressDialog(this);
 		dialog.show();
-		System.out.println("success..." + rennClient.getAccessToken());
 
-		ListFeedParam feedParam = new ListFeedParam();
+		GetUserParam userParam = new GetUserParam();
 		try {
-			rennClient.getRennService().sendAsynRequest(feedParam, new CallBack() {
+			rennClient.getRennService().sendAsynRequest(userParam, new CallBack() {
 
 				@Override
 				public void onSuccess(RennResponse arg0) {
-					// TODO Auto-generated method stub
-					System.out.println(arg0.toString());
+					//获取信息
+					RenrenUtils.getUsername(arg0);
 					dialog.dismiss();
+
 				}
 
 				@Override
 				public void onFailed(String arg0, String arg1) {
-					// TODO Auto-generated method stub
-					System.err.println("fffffffffffffffffffffffffffffffffffff");
+					System.out.println("failed.................");
 				}
 			});
 		} catch (RennException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
