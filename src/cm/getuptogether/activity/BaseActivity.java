@@ -7,6 +7,7 @@ import cm.getuptogether.util.VolleyTools;
 import com.google.gson.Gson;
 
 import android.app.Activity;
+import android.widget.Toast;
 
 public class BaseActivity extends Activity {
 	// 用于本地数据库存储
@@ -35,5 +36,9 @@ public class BaseActivity extends Activity {
 			dao = null;
 		}
 
+	}
+
+	public void showToast(String text) {
+		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
 	}
 }
