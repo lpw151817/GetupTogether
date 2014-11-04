@@ -19,7 +19,7 @@ import android.widget.EditText;
 @EActivity(R.layout.activity_register)
 public class RegisterActivity extends BaseActivity {
 	@ViewById
-	EditText et_username;
+	EditText et_username; 
 	@ViewById
 	EditText et_password;
 	@ViewById
