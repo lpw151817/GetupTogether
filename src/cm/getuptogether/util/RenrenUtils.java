@@ -44,9 +44,8 @@ import com.renn.rennsdk.RennResponse;
 
 
 public class RenrenUtils {
-	private static JSONObject rennResponse2JsonObject(RennResponse response) {
+	private static JSONObject rennResponse2JsonObject(String re) {
 		try {
-			String re = response.toString();
 			re = re.substring(re.indexOf("{"), re.length() - 1);
 			return new JSONObject(re);
 		} catch (JSONException e) {
@@ -55,7 +54,7 @@ public class RenrenUtils {
 		}
 	}
 
-	public static String getUsername(RennResponse response) {
+	public static String getUsername(String response) {
 		try {
 			return rennResponse2JsonObject(response).getJSONObject("response").getString("name");
 		} catch (JSONException e) {
@@ -69,7 +68,7 @@ public class RenrenUtils {
 	 * @param response
 	 * @return
 	 */
-	public static String getLogoURL(RennResponse response) {
+	public static String getLogoURL(String response) {
 		try {
 			JSONArray array = rennResponse2JsonObject(response).getJSONObject("response").getJSONArray("avatar");
 			return array.getJSONObject(0).getString("url");
