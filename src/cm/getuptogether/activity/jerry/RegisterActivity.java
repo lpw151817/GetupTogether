@@ -11,7 +11,7 @@ import cm.getuptogether.R.layout;
 import cm.getuptogether.activity.BaseActivity;
 import cm.getuptogether.request.StringRequest;
 import cm.getuptogether.util.Contants;
-import cm.getuptogether.util.RenrenUtils;
+import cm.getuptogether.util.ThirdLoginUtils;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -37,7 +37,9 @@ public class RegisterActivity extends BaseActivity {
 		if (thiredPartResponse != null && thiredPartResponse != "") {
 			// 如果是用人人登陆的
 			if (thiredPartResponse.startsWith(Contants.PREFIX_RENREN)) {
-				et_username.setText(RenrenUtils.getUsername(thiredPartResponse));
+				et_username.setText(ThirdLoginUtils.renren_getUsername(thiredPartResponse));
+			} else if (thiredPartResponse.startsWith(Contants.PREFIX_QQ)) {
+				et_username.setText(ThirdLoginUtils.qq_getNickName(thiredPartResponse));
 			}
 		}
 	}

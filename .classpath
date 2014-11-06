@@ -24,5 +24,7 @@
 	<classpathentry exported="true" kind="lib" path="libs/RennSDK-Android.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="libs/qq-mta-sdk-1.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/qq_open_sdk.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

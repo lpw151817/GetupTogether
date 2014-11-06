@@ -22,6 +22,9 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".Application"
@@ -39,10 +42,32 @@
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen" >
         </activity>
 
-        <!-- 人人验证Activity -->
+        <!-- 人人验证Activity begin -->
         <activity
             android:name="com.renn.rennsdk.oauth.OAuthActivity"
             android:configChanges="orientation|navigation|keyboardHidden" />
+        <!-- 人人验证Activity end -->
+
+
+        <!-- QQ验证Activity begin -->
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 应用的AppId -->
+                <data android:scheme="tencent1103432471" />
+            </intent-filter>
+        </activity>
+        <!-- QQ验证Activity end -->
 
         <service android:name=".service.OpenLockService" />
 
@@ -58,7 +83,6 @@
         <activity
             android:name=".activity.jerry.RegisterActivity_"
             android:label="@string/title_activity_register" >
-            
         </activity>
     </application>
 

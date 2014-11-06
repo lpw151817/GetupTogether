@@ -3,8 +3,6 @@ package cm.getuptogether.activity.jerry;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -12,26 +10,24 @@ import android.os.Bundle;
 import android.widget.Button;
 import cm.getuptogether.R;
 import cm.getuptogether.activity.BaseActivity;
-import cm.getuptogether.bean.jerry.ThirdPartyVerification;
 import cm.getuptogether.dao.jerry.ThirdPartyVerificationDAO;
 import cm.getuptogether.util.Contants;
-import cm.getuptogether.util.RenrenUtils;
 
 import com.renn.rennsdk.RennClient;
 import com.renn.rennsdk.RennExecutor.CallBack;
 import com.renn.rennsdk.RennResponse;
 import com.renn.rennsdk.exception.RennException;
 import com.renn.rennsdk.param.GetUserParam;
-import com.renn.rennsdk.param.ListFeedParam;
+import com.tencent.connect.UserInfo;
+import com.tencent.connect.auth.QQAuth;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 
 @EActivity(R.layout.activity_login)
-public class LoginActivity extends BaseActivity implements com.renn.rennsdk.RennClient.LoginListener {
+public class LoginActivity extends BaseActivity implements com.renn.rennsdk.RennClient.LoginListener, IUiListener {
 
 	// =======人人========
-	private final String RENREN_APP_ID = "272711";
-	private final String RENREN_API_KEY = "da5be33beb8b4aa69f7f99f0737fb3eb";
-	private final String RENREN_SECRET_KEY = "77dab849bcee456c8246607f4d588d07";
-	private final String RENREN_AUTHEN_THINGS = "read_user_feed status_update";
 	/**
 	 * 人人的权限 描述
 	 * 
@@ -56,17 +52,46 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 	 * 
 	 * admin_page 以用户的身份，管理其可以管理的公共主页的权限。
 	 */
+	private final String RENREN_APP_ID = "272711";
+	private final String RENREN_API_KEY = "da5be33beb8b4aa69f7f99f0737fb3eb";
+	private final String RENREN_SECRET_KEY = "77dab849bcee456c8246607f4d588d07";
+	private final String RENREN_AUTHEN_THINGS = "read_user_feed status_update";
+	RennClient rennClient;
+
+	// *************QQ
+	private final String QQ_APP_ID = "1103432471";
+	private final String QQ_APP_KEY = "JWXwA4tupklTX9U4";
+	Tencent mTencent;
 
 	@ViewById(R.id.btn_renren)
 	Button btn_renren;
-
-	RennClient rennClient;
+	@ViewById(R.id.btn_qq)
+	Button btn_qq;
+	@ViewById(R.id.bt_register)
+	Button btn_register;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dao = new ThirdPartyVerificationDAO(this);
 
+	}
+
+	@Click
+	void btn_qq() {
+		mTencent = Tencent.createInstance(QQ_APP_ID, this);
+		mTencent.login(this, "all", this);
+
+	}
+
+	@Click
+	void bt_register() {
+		Intent intent = new Intent(this, RegisterActivity_.class);
+		startActivity(intent);
+	}
+
+	@Click
+	void btn_renren() {
 		// 初始化RennClient
 		rennClient = RennClient.getInstance(this);// 获取实例
 		rennClient.init(RENREN_APP_ID, RENREN_API_KEY, RENREN_SECRET_KEY);// 设置应用程序信息
@@ -75,14 +100,10 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 		// 设置Token类型
 		rennClient.setTokenType("bearer"); // 使用bearer token
 
-		if (rennClient.isLogin()) {
-			getUserInfo();
-		}
+		// if (rennClient.isLogin()) {
+		// getUserInfo();
+		// }
 
-	}
-
-	@Click
-	void btn_renren() {
 		// 通过为rennClient设置监听来处理登陆结果
 		rennClient.setLoginListener(this);
 		// 登录
@@ -130,4 +151,48 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 			e.printStackTrace();
 		}
 	}
+
+	// QQ Callback
+	@Override
+	public void onCancel() {
+		System.out.println("...............cancel");
+	}
+
+	// QQ Callback
+	@Override
+	public void onComplete(Object arg0) {
+		System.out.println(".............complete");
+		UserInfo info = new UserInfo(this, mTencent.getQQToken());
+		info.getUserInfo(new IUiListener() {
+
+			@Override
+			public void onError(UiError arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onComplete(Object arg0) {
+				Intent intent = new Intent(LoginActivity.this, RegisterActivity_.class);
+				intent.putExtra(Contants.INTENT_THRIDPART4REG_STRING, Contants.PREFIX_QQ + arg0.toString());
+				LoginActivity.this.startActivity(intent);
+			}
+
+			@Override
+			public void onCancel() {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+	}
+
+	// QQ Callback
+	@Override
+	public void onError(UiError arg0) {
+		// TODO Auto-generated method stub
+		System.out.println("...............UiError");
+		System.out.println(arg0.toString());
+	}
+
 }
