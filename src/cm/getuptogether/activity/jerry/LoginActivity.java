@@ -18,14 +18,17 @@ import com.renn.rennsdk.RennExecutor.CallBack;
 import com.renn.rennsdk.RennResponse;
 import com.renn.rennsdk.exception.RennException;
 import com.renn.rennsdk.param.GetUserParam;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.sina.weibo.sdk.auth.WeiboAuth;
+import com.sina.weibo.sdk.auth.WeiboAuthListener;
+import com.sina.weibo.sdk.exception.WeiboException;
 import com.tencent.connect.UserInfo;
-import com.tencent.connect.auth.QQAuth;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
 @EActivity(R.layout.activity_login)
-public class LoginActivity extends BaseActivity implements com.renn.rennsdk.RennClient.LoginListener, IUiListener {
+public class LoginActivity extends BaseActivity implements com.renn.rennsdk.RennClient.LoginListener, IUiListener, WeiboAuthListener {
 
 	// =======人人========
 	/**
@@ -63,10 +66,19 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 	private final String QQ_APP_KEY = "JWXwA4tupklTX9U4";
 	Tencent mTencent;
 
+	// .............微博
+	private final String WEIBO_APP_KEY = "2316724904";
+	public static final String WEIBO_REDIRECT_URL = "http://banbore.com";// 应用的回调页
+	// 应用申请的高级权限
+	public static final String WEIBO_SCOPE = "email,direct_messages_read,direct_messages_write,friendships_groups_read,friendships_groups_write,statuses_to_me_read,follow_app_official_microblog,invitation_write";
+	WeiboAuth mWeiboAuth;
+
 	@ViewById(R.id.btn_renren)
 	Button btn_renren;
 	@ViewById(R.id.btn_qq)
 	Button btn_qq;
+	@ViewById(R.id.btn_weibo)
+	Button btn_weibo;
 	@ViewById(R.id.bt_register)
 	Button btn_register;
 
@@ -82,6 +94,12 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 		mTencent = Tencent.createInstance(QQ_APP_ID, this);
 		mTencent.login(this, "all", this);
 
+	}
+
+	@Click
+	void btn_weibo() {
+		mWeiboAuth = new WeiboAuth(this, WEIBO_APP_KEY, WEIBO_REDIRECT_URL, WEIBO_SCOPE);
+		mWeiboAuth.anthorize(this);
 	}
 
 	@Click
@@ -154,12 +172,6 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 
 	// QQ Callback
 	@Override
-	public void onCancel() {
-		System.out.println("...............cancel");
-	}
-
-	// QQ Callback
-	@Override
 	public void onComplete(Object arg0) {
 		System.out.println(".............complete");
 		UserInfo info = new UserInfo(this, mTencent.getQQToken());
@@ -190,9 +202,43 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 	// QQ Callback
 	@Override
 	public void onError(UiError arg0) {
-		// TODO Auto-generated method stub
 		System.out.println("...............UiError");
 		System.out.println(arg0.toString());
+	}
+
+	// QQ Callback
+	// Weibo Callback
+	@Override
+	public void onCancel() {
+		System.out.println("...............cancel");
+	}
+
+	// Weibo Callback
+	@Override
+	public void onComplete(Bundle arg0) {
+		// TODO Auto-generated method stub
+		System.out.println(arg0.toString());
+
+		Oauth2AccessToken mAccessToken = Oauth2AccessToken.parseAccessToken(arg0);
+		if (mAccessToken.isSessionValid()) {
+			
+			
+		} else {
+			// 以下几种情况，您会收到 Code：
+            // 1. 当您未在平台上注册的应用程序的包名与签名时；
+            // 2. 当您注册的应用程序包名与签名不正确时；
+            // 3. 当您在平台上注册的包名和签名与您当前测试的应用的包名和签名不匹配时。
+			String code = arg0.getString("code", "");
+			System.out.println("error code: " + code + "...................");
+		}
+	}
+
+	// Weibo Callback
+	@Override
+	public void onWeiboException(WeiboException arg0) {
+		System.out.println("...............UiError");
+		System.out.println(arg0.toString());
+		showToast(arg0.toString());
 	}
 
 }
