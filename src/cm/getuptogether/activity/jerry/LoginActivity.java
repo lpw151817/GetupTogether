@@ -7,12 +7,22 @@ import org.androidannotations.annotations.ViewById;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import cm.getuptogether.R;
 import cm.getuptogether.activity.BaseActivity;
+import cm.getuptogether.bean.jerry.UserBean;
 import cm.getuptogether.dao.jerry.ThirdPartyVerificationDAO;
+import cm.getuptogether.inter.HandleUI;
+import cm.getuptogether.param.jerry.LoginParam;
+import cm.getuptogether.request.StringRequest;
 import cm.getuptogether.util.Contants;
+import cm.getuptogether.util.NetworkHelper;
 
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.renn.rennsdk.RennClient;
 import com.renn.rennsdk.RennExecutor.CallBack;
 import com.renn.rennsdk.RennResponse;
@@ -82,14 +92,55 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 	Button btn_qq;
 	@ViewById(R.id.btn_weibo)
 	Button btn_weibo;
-	@ViewById(R.id.bt_register)
+	@ViewById(R.id.login_register)
 	Button btn_register;
+	@ViewById(R.id.login_login)
+	Button btn_login;
+
+	@ViewById(R.id.login_username)
+	EditText et_username;
+	@ViewById(R.id.login_password)
+	EditText et_password;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dao = new ThirdPartyVerificationDAO(this);
 
+	}
+
+	@Click
+	void login_login() {
+		if (TextUtils.isEmpty(et_username.getText().toString()))
+			showToast("请输入用户名");
+		else {
+			if (TextUtils.isEmpty(et_password.getText().toString()))
+				showToast("请输入密码");
+			else {
+				// 登录
+				new NetworkHelper(this).handleString_Object(Contants.URL_LOGIN_POST, new HandleUI<String>() {
+
+					@Override
+					public void onResponse(String response) {
+						UserBean user = UserBean.parase(response);
+						if (user != null) {
+							switch (user.getCode()) {
+							case Contants.SERVERCODE_LOGIN_NOACCOUNT:
+								showToast("您输入的用户不存在");
+								break;
+							case Contants.SERVERCODE_LOGIN_SECCESS:
+								showToast("登录成功");
+								break;
+							case Contants.SERVERCODE_LOGIN_WRONGPASSWORD:
+								showToast("密码错误");
+								break;
+							}
+						}
+					}
+				}, new LoginParam(et_username.getText().toString(), et_password.getText().toString()));
+
+			}
+		}
 	}
 
 	@Click
@@ -106,7 +157,7 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 	}
 
 	@Click
-	void bt_register() {
+	void login_register() {
 		Intent intent = new Intent(this, RegisterActivity_.class);
 		startActivity(intent);
 	}
