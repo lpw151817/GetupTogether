@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sina.weibo.sdk.openapi.models.User;
+
 public class ThirdLoginUtils {
 	/**
 	 * renren json format
@@ -39,6 +41,12 @@ public class ThirdLoginUtils {
 	}
 	 *
 	 */
+	
+	/**
+	 * 
+	 * @param re 带前缀
+	 * @return
+	 */
 	private static JSONObject rennResponse2JsonObject(String re) {
 		try {
 			re = re.substring(re.indexOf("{"), re.length() - 1);
@@ -49,6 +57,11 @@ public class ThirdLoginUtils {
 		}
 	}
 
+	/**
+	 * 
+	 * @param response 带前缀
+	 * @return
+	 */
 	public static String renren_getUsername(String response) {
 		try {
 			return rennResponse2JsonObject(response).getJSONObject("response").getString("name");
@@ -98,14 +111,27 @@ public class ThirdLoginUtils {
 
 	 */
 	
+	/**
+	 * @param jo 带有前缀
+	 * @return
+	 */
 	public static String qq_getNickName(String jo){
 		try {
-			JSONObject jsonObject = new JSONObject(jo.substring(jo.indexOf("{"), jo.length()));
+			JSONObject jsonObject = new JSONObject(jo.substring(jo.indexOf("{")));
 			return jsonObject.getString("nickname");
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return "";
 		}
 		
+	}
+	
+	/**
+	 * 
+	 * @param response 带有前缀
+	 * @return 更改失败返回null
+	 */
+	public static User weibo_getUserObject(String response){
+		return User.parse(response.substring(response.indexOf("{")));
 	}
 }

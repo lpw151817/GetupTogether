@@ -38,8 +38,14 @@ public class RegisterActivity extends BaseActivity {
 			// 如果是用人人登陆的
 			if (thiredPartResponse.startsWith(Contants.PREFIX_RENREN)) {
 				et_username.setText(ThirdLoginUtils.renren_getUsername(thiredPartResponse));
-			} else if (thiredPartResponse.startsWith(Contants.PREFIX_QQ)) {
+			}
+			// QQ
+			else if (thiredPartResponse.startsWith(Contants.PREFIX_QQ)) {
 				et_username.setText(ThirdLoginUtils.qq_getNickName(thiredPartResponse));
+			}
+			// Weibo
+			else if (thiredPartResponse.startsWith(Contants.PREFIX_WEIBO)) {
+				et_username.setText(ThirdLoginUtils.weibo_getUserObject(thiredPartResponse).screen_name);
 			}
 		}
 	}

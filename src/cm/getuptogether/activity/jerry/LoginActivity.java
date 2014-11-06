@@ -22,6 +22,9 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.exception.WeiboException;
+import com.sina.weibo.sdk.net.RequestListener;
+import com.sina.weibo.sdk.openapi.UsersAPI;
+import com.sina.weibo.sdk.openapi.models.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -179,8 +182,7 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 
 			@Override
 			public void onError(UiError arg0) {
-				// TODO Auto-generated method stub
-
+				System.out.println("error:" + arg0.toString());
 			}
 
 			@Override
@@ -192,8 +194,7 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 
 			@Override
 			public void onCancel() {
-				// TODO Auto-generated method stub
-
+				System.out.println("cancel////");
 			}
 		});
 
@@ -216,18 +217,32 @@ public class LoginActivity extends BaseActivity implements com.renn.rennsdk.Renn
 	// Weibo Callback
 	@Override
 	public void onComplete(Bundle arg0) {
-		// TODO Auto-generated method stub
-		System.out.println(arg0.toString());
-
+		dialog = new ProgressDialog(LoginActivity.this);
+		dialog.show();
 		Oauth2AccessToken mAccessToken = Oauth2AccessToken.parseAccessToken(arg0);
 		if (mAccessToken.isSessionValid()) {
-			
-			
+			UsersAPI mUsersAPI = new UsersAPI(mAccessToken);
+			mUsersAPI.show(Long.parseLong(mAccessToken.getUid()), new RequestListener() {
+
+				@Override
+				public void onWeiboException(WeiboException arg0) {
+					System.out.println(arg0.toString());
+				}
+
+				@Override
+				public void onComplete(String arg0) {
+					Intent intent = new Intent(LoginActivity.this, RegisterActivity_.class);
+					intent.putExtra(Contants.INTENT_THRIDPART4REG_STRING, Contants.PREFIX_WEIBO + arg0.toString());
+					LoginActivity.this.startActivity(intent);
+					dialog.dismiss();
+				}
+			});
+
 		} else {
 			// 以下几种情况，您会收到 Code：
-            // 1. 当您未在平台上注册的应用程序的包名与签名时；
-            // 2. 当您注册的应用程序包名与签名不正确时；
-            // 3. 当您在平台上注册的包名和签名与您当前测试的应用的包名和签名不匹配时。
+			// 1. 当您未在平台上注册的应用程序的包名与签名时；
+			// 2. 当您注册的应用程序包名与签名不正确时；
+			// 3. 当您在平台上注册的包名和签名与您当前测试的应用的包名和签名不匹配时。
 			String code = arg0.getString("code", "");
 			System.out.println("error code: " + code + "...................");
 		}

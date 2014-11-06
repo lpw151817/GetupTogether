@@ -6,4 +6,5 @@ public class Contants {
 
 	public static final String PREFIX_RENREN = "PREFIX_RENREN";
 	public static final String PREFIX_QQ = "PREFIX_QQ";
+	public static final String PREFIX_WEIBO = "PREFIX_WEIBO";
 }
