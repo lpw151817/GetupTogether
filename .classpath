@@ -3,6 +3,7 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="lib" path="libs/gson-1.6.jar"/>
+	<classpathentry kind="lib" path="libs/fastjson-1.1.40.jar"/>
 	<classpathentry kind="src" path=".apt_generated">
 		<attributes>
 			<attribute name="optional" value="true"/>
@@ -21,8 +22,8 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/GetUpTogether/doc/ormlite-core-4.48-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="libs/RennSDK-Android.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry exported="true" kind="lib" path="libs/RennSDK-Android.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
