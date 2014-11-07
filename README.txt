@@ -1,13 +1,3 @@
-	===================2014.11.06 update=====================
-
-	将ProgressDialog封装进了NetworkHelper中。
-	现在进行网络通信方法：
-	1.创建一个NetworkHelper的对象
-	2.实现HandleUI的接口，用于当服务器返回数据时，处理UI
-	3.调用handleObject/handleString方法，将相关参数传递进去（暂时只支持了String的交换，之后将更新其他方法，支持更多数据格式）
-	
-	===================2014.11.06 update end=====================
-
 1.所有的activity继承cm.getuptogether.activity.BaseActivity。Dao继承cm.getuptogether.dao.BaseDao。
 
 2.如何使用AndroidAnnotation:
@@ -105,15 +95,10 @@
 	 System.out.println(test);
 	 }
 	 
-4.如何使用Volley进行网络通信（@Deprecated）
+4.如何使用Volley进行网络通信
 	直接从BaseActivity中拿出VolleyTools对象，然后参照cm.getuptogether.activity.MainActivity中。
 
 5.在BaseActivity中还定义了Gson，直接就可以使用。
 
 
-
-	
-	
-	
-	
-	
+	 
